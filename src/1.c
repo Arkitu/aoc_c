@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int comp(unsigned int *a, unsigned int *b) {
-    return a-b;
+int comp(const void *a, const void *b) {
+    return (*(int*)a - *(int*)b);
 }
 
 int main() {
@@ -18,11 +18,21 @@ int main() {
         exit(1);
     }
 
-    unsigned int la[1000];
-    unsigned int lb[1000];
+    int la[1000];
+    int lb[1000];
     for (size_t i=0; i<1000; i++) {
-        fscanf(fptr, "%u   %u", la+i, lb+i);
+        fscanf(fptr, "%d   %d", la+i, lb+i);
     }
+
+    qsort(la, 1000, sizeof(int), comp);
+    qsort(lb, 1000, sizeof(int), comp);
+    
+    int count = 0;
+    for (size_t i=0; i<1000; i++) {
+        count += abs(la[i] - lb[i]);
+    }
+
+    printf("%i", count);
 
     fclose(fptr);
     return 0;
